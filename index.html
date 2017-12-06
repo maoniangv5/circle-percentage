@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>H5圆形百分比</title>
+    <style>
+    body>div {
+        width: 300px
+    }
+
+    input {
+        display: block;
+        margin: 0 auto
+    }
+    </style>
+</head>
+
+<body>
+    <!-- 添加canvas标签，并加上红色边框以便于在页面上查看 -->
+    <div>
+        <canvas id="myCanvas" width="300px" height="300px"></canvas>
+    </div>
+    <script type="text/javascript">
+    //获取Canvas对象(画布)
+    var canvas = document.getElementById("myCanvas");
+
+    function drawScreen(el, loan, n) {
+        // x,y => 圆心坐标点 // r => 圆弧半径 
+        var ctx = el.getContext("2d");
+        var arc = {
+                x: el.width / 2,
+                y: el.height / 2,
+                r: 100
+            },
+            w = el.width,
+            h = el.height;
+
+        // 圆环
+        var drawCircle = function() {
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = '#39b8ef';
+            ctx.beginPath();
+            ctx.arc(arc.x, arc.y, arc.r, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // 内部填充
+        var drawInner = function(per) {
+            ctx.beginPath();
+            ctx.fillStyle = "#b0e3f9";
+            ctx.arc(arc.x, arc.y, arc.r - 3, getRads(90 - per / 100 * 360 / 2), getRads(90 + per / 100 * 360 / 2));
+            ctx.fill();
+            if (per == Math.floor(n)) {
+                drawText();
+            }
+        }
+
+        // 填充文字
+        var drawText = function() {
+            var size = 0.2 * arc.r;
+            ctx.fillStyle = "#000";
+            ctx.font = size + 'px Microsoft Yahei';
+            ctx.textAlign = 'center';
+            ctx.fillText(loan, arc.x, arc.y + size / 2);
+        }
+
+        drawCircle();
+
+        var temp = 0;
+
+        setInterval(function() {
+            if (temp < Math.floor(n)) {
+                temp++
+                drawInner(temp);
+            }
+        }, 1500 / Math.floor(n))
+
+    }
+
+    // 角度转弧度
+    function getRads(degrees) {
+        return (Math.PI * degrees) / 180;
+    }
+
+    // 弧度转角度
+    function getDegrees(rads) {
+        return (rads * 180) / Math
+    }
+
+    // 调用 传入canvas节点、text文本、百分比
+    drawScreen(canvas, '50%', 50);
+    </script>
+</body>
+
+</html>
